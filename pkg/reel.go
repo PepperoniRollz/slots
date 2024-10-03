@@ -9,58 +9,45 @@ import (
 )
 
 type Reel struct {
-	Symbols     []Symbol
+	Symbols     []WeightedSymbol
 	Size        int
 	VirtualReel []Symbol
 }
 
-type Symbol struct {
-	Name   string
+type WeightedSymbol struct {
+	Symbol Symbol
 	Weight int
 }
 
-func NewReel(symbols []Symbol) *Reel {
+func NewReel(symbols []WeightedSymbol) *Reel {
 	return &Reel{
 		Symbols: symbols,
 	}
 }
 func (l *Slots) SymbolsToIcons() {
-	symbolToUnicode := map[string]string{
-		"WS": "🃏",  // Wild
-		"LM": "🦞",  // Lobstermania
-		"BU": "🎈",  // Buoy
-		"BO": "⛵",  // Boat
-		"LH": "🚨",  // Light House
-		"TU": "🐟",  // Tuna
-		"CL": "🦪",  // Clam
-		"SG": "🕊️", // Sea Gull
-		"SF": "🌟",  // Star Fish
-		"LO": "🎰",  // Bonus
-		"LT": "🎲",  // Scatter
+	symbolToUnicode := map[Symbol]string{
+		WILD:         "🃏",  // Wild
+		LOBSTERMANIA: "🦞",  // Lobstermania
+		BUOY:         "🎈",  // Buoy
+		BOAT:         "⛵",  // Boat
+		LIGHTHOUSE:   "🚨",  // Light House
+		TUNA:         "🐟",  // Tuna
+		CLAM:         "🦪",  // Clam
+		SEAGULL:      "🕊️", // Sea Gull
+		STARFISH:     "🌟",  // Star Fish
+		BONUS:        "🎰",  // Bonus
+		SCATTER:      "🎲",  // Scatter
 	}
 	unicodeSymbols := make([]string, len(l.SpinResult))
 
 	for i, symbol := range l.SpinResult {
-		if unicodeChar, ok := symbolToUnicode[symbol.Name]; ok {
+		if unicodeChar, ok := symbolToUnicode[symbol]; ok {
 			unicodeSymbols[i] = unicodeChar
 		} else {
 			unicodeSymbols[i] = "❓"
 		}
 	}
 	l.PrettyReel = unicodeSymbols
-}
-
-func NewSymbol(name string, weight int) *Symbol {
-	return &Symbol{Name: name,
-		Weight: weight}
-}
-func NewSymbols(numSymbols int, names []string, weights []int) []Symbol {
-	var symbols []Symbol
-	for i := 0; i < numSymbols; i++ {
-		symbols = append(symbols, *NewSymbol(names[i], weights[i]))
-	}
-
-	return symbols
 }
 
 type Payline struct {
@@ -79,71 +66,71 @@ func NewPayline(symbols string, payout int, creditsWagered int) *Payline {
 
 func buildReels() []*Reel {
 	reels := []*Reel{
-		NewReel([]Symbol{
-			{Name: "WS", Weight: 2},
-			{Name: "LM", Weight: 4},
-			{Name: "BU", Weight: 4},
-			{Name: "BO", Weight: 6},
-			{Name: "LH", Weight: 5},
-			{Name: "TU", Weight: 6},
-			{Name: "CL", Weight: 6},
-			{Name: "SG", Weight: 5},
-			{Name: "SF", Weight: 5},
-			{Name: "LO", Weight: 2},
-			{Name: "LT", Weight: 2},
+		NewReel([]WeightedSymbol{
+			{Symbol: WILD, Weight: 2},
+			{Symbol: LOBSTERMANIA, Weight: 4},
+			{Symbol: BUOY, Weight: 4},
+			{Symbol: BOAT, Weight: 6},
+			{Symbol: LIGHTHOUSE, Weight: 5},
+			{Symbol: TUNA, Weight: 6},
+			{Symbol: CLAM, Weight: 6},
+			{Symbol: SEAGULL, Weight: 5},
+			{Symbol: STARFISH, Weight: 5},
+			{Symbol: BONUS, Weight: 2},
+			{Symbol: SCATTER, Weight: 2},
 		}),
-		NewReel([]Symbol{
-			{Name: "WS", Weight: 2},
-			{Name: "LM", Weight: 4},
-			{Name: "BU", Weight: 4},
-			{Name: "BO", Weight: 4},
-			{Name: "LH", Weight: 4},
-			{Name: "TU", Weight: 4},
-			{Name: "CL", Weight: 6},
-			{Name: "SG", Weight: 6},
-			{Name: "SF", Weight: 5},
-			{Name: "LO", Weight: 5},
-			{Name: "LT", Weight: 2},
+		NewReel([]WeightedSymbol{
+			{Symbol: WILD, Weight: 2},
+			{Symbol: LOBSTERMANIA, Weight: 4},
+			{Symbol: BUOY, Weight: 4},
+			{Symbol: BOAT, Weight: 4},
+			{Symbol: LIGHTHOUSE, Weight: 4},
+			{Symbol: TUNA, Weight: 4},
+			{Symbol: CLAM, Weight: 6},
+			{Symbol: SEAGULL, Weight: 6},
+			{Symbol: STARFISH, Weight: 5},
+			{Symbol: BONUS, Weight: 5},
+			{Symbol: SCATTER, Weight: 2},
 		}),
-		NewReel([]Symbol{
-			{Name: "WS", Weight: 1},
-			{Name: "LM", Weight: 3},
-			{Name: "BU", Weight: 5},
-			{Name: "BO", Weight: 4},
-			{Name: "LH", Weight: 6},
-			{Name: "TU", Weight: 5},
-			{Name: "CL", Weight: 5},
-			{Name: "SG", Weight: 5},
-			{Name: "SF", Weight: 6},
-			{Name: "LO", Weight: 6},
-			{Name: "LT", Weight: 2},
+		NewReel([]WeightedSymbol{
+			{Symbol: WILD, Weight: 1},
+			{Symbol: LOBSTERMANIA, Weight: 3},
+			{Symbol: BUOY, Weight: 5},
+			{Symbol: BOAT, Weight: 4},
+			{Symbol: LIGHTHOUSE, Weight: 6},
+			{Symbol: TUNA, Weight: 5},
+			{Symbol: CLAM, Weight: 5},
+			{Symbol: SEAGULL, Weight: 5},
+			{Symbol: STARFISH, Weight: 6},
+			{Symbol: BONUS, Weight: 6},
+			{Symbol: SCATTER, Weight: 2},
 		}),
-		NewReel([]Symbol{
-			{Name: "WS", Weight: 4},
-			{Name: "LM", Weight: 4},
-			{Name: "BU", Weight: 4},
-			{Name: "BO", Weight: 4},
-			{Name: "LH", Weight: 6},
-			{Name: "TU", Weight: 6},
-			{Name: "CL", Weight: 6},
-			{Name: "SG", Weight: 6},
-			{Name: "SF", Weight: 8},
-			{Name: "LO", Weight: 0},
-			{Name: "LT", Weight: 2},
+		NewReel([]WeightedSymbol{
+			{Symbol: WILD, Weight: 4},
+			{Symbol: LOBSTERMANIA, Weight: 4},
+			{Symbol: BUOY, Weight: 4},
+			{Symbol: BOAT, Weight: 4},
+			{Symbol: LIGHTHOUSE, Weight: 6},
+			{Symbol: TUNA, Weight: 6},
+			{Symbol: CLAM, Weight: 6},
+			{Symbol: SEAGULL, Weight: 6},
+			{Symbol: STARFISH, Weight: 8},
+			{Symbol: BONUS, Weight: 0},
+			{Symbol: SCATTER, Weight: 2},
 		}),
 
-		NewReel([]Symbol{
-			{Name: "WS", Weight: 2},
-			{Name: "LM", Weight: 4},
-			{Name: "BU", Weight: 5},
-			{Name: "BO", Weight: 4},
-			{Name: "LH", Weight: 7},
-			{Name: "TU", Weight: 7},
-			{Name: "CL", Weight: 6},
-			{Name: "SG", Weight: 6},
-			{Name: "SF", Weight: 7},
-			{Name: "LO", Weight: 0},
-			{Name: "LT", Weight: 2},
+		NewReel([]WeightedSymbol{
+			{Symbol: WILD, Weight: 2},
+			{Symbol: LOBSTERMANIA, Weight: 4},
+			{Symbol: BUOY, Weight: 5},
+			{Symbol: BOAT, Weight: 4},
+			{Symbol: LIGHTHOUSE, Weight: 7},
+			{Symbol: TUNA, Weight: 7},
+			{Symbol: CLAM, Weight: 6},
+			{Symbol: SEAGULL, Weight: 6},
+			{Symbol: STARFISH, Weight: 7},
+			{Symbol: BONUS, Weight: 0},
+			{Symbol: SCATTER, Weight: 2},
 		}),
 	}
 	for _, reel := range reels {
@@ -158,8 +145,8 @@ func buildReels() []*Reel {
 		var virtualReel []Symbol
 		for len(virtualReel) < reel.Size {
 			for _, symbol := range reel.Symbols {
-				if count(virtualReel, symbol) < symbol.Weight && float64(count(virtualReel, symbol)) <= float64(symbol.Weight)/float64(reel.Size)*float64(len(virtualReel)) {
-					virtualReel = append(virtualReel, symbol)
+				if count(virtualReel, symbol.Symbol) < symbol.Weight && float64(count(virtualReel, symbol.Symbol)) <= float64(symbol.Weight)/float64(reel.Size)*float64(len(virtualReel)) {
+					virtualReel = append(virtualReel, symbol.Symbol)
 				}
 			}
 		}
@@ -179,16 +166,20 @@ func count(reel []Symbol, symbol Symbol) int {
 }
 
 type Slots struct {
-	Reels            []*Reel
-	PayLines         [][]int
-	Payouts          map[Payout]int
-	CreditsWagered   int
-	NumLinesSelected int
-	SpinResult       []Symbol
-	BonusesHit       int
-	ScatterPaidOut   int
-	LinesPaidOut     int
-	PrettyReel       []string
+	Reels          []*Reel
+	PayLines       [][]int
+	Payouts        map[Payout]int
+	CreditsWagered int
+	NumLinesPlayed int
+	SpinResult     []Symbol
+	BonusesHit     float64
+	LineHitRate    float64
+	BonusesHitRate float64
+	BonusesHitPay  float64
+	ScatterHitRate float64
+	LineHitPay     float64
+	ScatterHitPay  float64
+	PrettyReel     []string
 }
 
 func NewSlots() *Slots {
@@ -199,68 +190,77 @@ func NewSlots() *Slots {
 	}
 }
 
-func (l *Slots) Evaluate(linesPlayed int) int {
+func (l *Slots) Evaluate(linesPlayed, wagerPerLine int) int {
 
 	totalPayout := 0
 	for i := 0; i < linesPlayed; i++ {
 		count := 1
 		wildCounts := 0
 		firstSymbolInPayline := l.SpinResult[l.PayLines[i][0]]
-		if firstSymbolInPayline.Name == "WS" {
+		if firstSymbolInPayline == WILD {
 			wildCounts++
 		}
 		for j := 1; j < 5; j++ {
 
-			currentSymbol := l.SpinResult[l.PayLines[i][j]].Name
+			currentSymbol := l.SpinResult[l.PayLines[i][j]]
+			currentIsWild := currentSymbol == WILD
 
-			if currentSymbol == "WS" && wildCounts > 0 {
+			if currentIsWild && firstSymbolInPayline == WILD {
 				wildCounts++
 			}
 
-			if currentSymbol == "LT" || firstSymbolInPayline.Name == "LT" {
+			if firstSymbolInPayline == BONUS && currentSymbol == WILD || firstSymbolInPayline == WILD && currentSymbol == BONUS {
 				break
 			}
-
-			if firstSymbolInPayline.Name == "WS" && currentSymbol != "WS" && currentSymbol != "LO" {
-				firstSymbolInPayline.Name = currentSymbol
+			if currentSymbol == SCATTER || firstSymbolInPayline == SCATTER {
+				break
 			}
-			if currentSymbol == firstSymbolInPayline.Name || currentSymbol == "WS" {
-				if firstSymbolInPayline.Name == "LO" && currentSymbol == "WS" {
-					break
-				}
+			if firstSymbolInPayline == WILD && !currentIsWild {
+				firstSymbolInPayline = currentSymbol
+			}
+			if currentSymbol == firstSymbolInPayline || currentIsWild {
 				count++
-
 			} else {
 				break
 			}
 		}
 
 		if count >= 2 {
-			linePay := int(math.Max(float64(l.Payouts[Payout{Symbol: firstSymbolInPayline.Name, Count: count}]), float64(l.Payouts[Payout{Symbol: "WS", Count: wildCounts}])))
-			if linePay == 331 {
-				l.BonusesHit += 331
-
-			} else {
-				l.LinesPaidOut += linePay
+			linePay := int(math.Max(float64(l.Payouts[Payout{Symbol: firstSymbolInPayline, Count: count}]), float64(l.Payouts[Payout{
+				Symbol: WILD,
+				Count:  wildCounts,
+			}])))
+			if linePay == 10000 {
+				fmt.Println(linePay, count, wildCounts)
+				l.PrintReel()
 			}
-			totalPayout += linePay
+			if linePay == 331 {
+				l.BonusesHitPay += 331 * float64(wagerPerLine)
+				l.BonusesHitRate++
+
+			} else if linePay > 0 {
+				l.LineHitPay += float64(linePay) * float64(wagerPerLine)
+				l.LineHitRate++
+			}
+			totalPayout += int(linePay) * wagerPerLine
 		}
 	}
 
 	//check scatter
 	scatterCount := 0
 	for _, symbol := range l.SpinResult {
-		if symbol.Name == "LT" {
+		if symbol == SCATTER {
 			scatterCount++
 		}
 	}
 	if scatterCount >= 3 {
-		scatterPay := l.Payouts[Payout{Symbol: "LT", Count: scatterCount}] * linesPlayed
+		scatterPay := l.Payouts[Payout{Symbol: SCATTER, Count: scatterCount}] * linesPlayed * wagerPerLine
 		totalPayout += scatterPay
-		l.ScatterPaidOut += scatterPay
+		l.ScatterHitPay += float64(scatterPay)
+		l.ScatterHitRate++
 	}
 
-	return totalPayout
+	return int(totalPayout)
 }
 
 // func (l *LuckyLobster) bonusRound() {
@@ -323,7 +323,6 @@ func (l *Slots) Spin() {
 
 		for row := 0; row < 3; row++ {
 			index := (startIndexInt + row) % reel.Size
-
 			resultGrid[row][reelIndex] = reel.VirtualReel[index]
 
 			flatIndex := row*len(l.Reels) + reelIndex
@@ -336,10 +335,11 @@ func (l *Slots) Spin() {
 func (l *Slots) PrintReel() {
 	rows := 3
 	cols := 5
-	fmt.Print("\033[H\033[2J")
+	// fmt.Print("\033[H\033[2J")
 	fmt.Print("= = = = = = = = = = =\n")
 
-	l.AnimateSpin()
+	// l.AnimateSpin()
+	l.SymbolsToIcons()
 	for i := 0; i < rows; i++ {
 		row := ""
 		for j := 0; j < cols; j++ {
@@ -404,55 +404,71 @@ func buildPayLines() [][]int {
 }
 
 type Payout struct {
-	Symbol string
+	Symbol Symbol
 	Count  int
 }
+
+type Symbol uint8
+
+const (
+	WILD Symbol = iota
+	LOBSTERMANIA
+	BUOY
+	BOAT
+	LIGHTHOUSE
+	TUNA
+	CLAM
+	SEAGULL
+	STARFISH
+	BONUS
+	SCATTER
+)
 
 func buildPayoutMap() map[Payout]int {
 	return map[Payout]int{
 
-		{Symbol: "WS", Count: 2}: 5,
-		{Symbol: "WS", Count: 3}: 100,
-		{Symbol: "WS", Count: 4}: 500,
-		{Symbol: "WS", Count: 5}: 10_000,
+		{Symbol: WILD, Count: 2}: 5,
+		{Symbol: WILD, Count: 3}: 100,
+		{Symbol: WILD, Count: 4}: 500,
+		{Symbol: WILD, Count: 5}: 10_000,
 
-		{Symbol: "LM", Count: 2}: 2,
-		{Symbol: "LM", Count: 3}: 40,
-		{Symbol: "LM", Count: 4}: 200,
-		{Symbol: "LM", Count: 5}: 1_000,
+		{Symbol: LOBSTERMANIA, Count: 2}: 2,
+		{Symbol: LOBSTERMANIA, Count: 3}: 40,
+		{Symbol: LOBSTERMANIA, Count: 4}: 200,
+		{Symbol: LOBSTERMANIA, Count: 5}: 1_000,
 
-		{Symbol: "BU", Count: 3}: 25,
-		{Symbol: "BU", Count: 4}: 100,
-		{Symbol: "BU", Count: 5}: 500,
+		{Symbol: BUOY, Count: 3}: 25,
+		{Symbol: BUOY, Count: 4}: 100,
+		{Symbol: BUOY, Count: 5}: 500,
 
-		{Symbol: "BO", Count: 3}: 25,
-		{Symbol: "BO", Count: 4}: 100,
-		{Symbol: "BO", Count: 5}: 500,
+		{Symbol: BOAT, Count: 3}: 25,
+		{Symbol: BOAT, Count: 4}: 100,
+		{Symbol: BOAT, Count: 5}: 500,
 
-		{Symbol: "LH", Count: 3}: 10,
-		{Symbol: "LH", Count: 4}: 50,
-		{Symbol: "LH", Count: 5}: 500,
+		{Symbol: LIGHTHOUSE, Count: 3}: 10,
+		{Symbol: LIGHTHOUSE, Count: 4}: 50,
+		{Symbol: LIGHTHOUSE, Count: 5}: 500,
 
-		{Symbol: "TU", Count: 3}: 10,
-		{Symbol: "TU", Count: 4}: 50,
-		{Symbol: "TU", Count: 5}: 250,
+		{Symbol: TUNA, Count: 3}: 10,
+		{Symbol: TUNA, Count: 4}: 50,
+		{Symbol: TUNA, Count: 5}: 250,
 
-		{Symbol: "CL", Count: 3}: 5,
-		{Symbol: "CL", Count: 4}: 30,
-		{Symbol: "CL", Count: 5}: 200,
+		{Symbol: CLAM, Count: 3}: 5,
+		{Symbol: CLAM, Count: 4}: 30,
+		{Symbol: CLAM, Count: 5}: 200,
 
-		{Symbol: "SG", Count: 3}: 5,
-		{Symbol: "SG", Count: 4}: 30,
-		{Symbol: "SG", Count: 5}: 200,
+		{Symbol: SEAGULL, Count: 3}: 5,
+		{Symbol: SEAGULL, Count: 4}: 30,
+		{Symbol: SEAGULL, Count: 5}: 200,
 
-		{Symbol: "SF", Count: 3}: 5,
-		{Symbol: "SF", Count: 4}: 30,
-		{Symbol: "SF", Count: 5}: 150,
+		{Symbol: STARFISH, Count: 3}: 5,
+		{Symbol: STARFISH, Count: 4}: 30,
+		{Symbol: STARFISH, Count: 5}: 150,
 
-		{Symbol: "LO", Count: 3}: 331,
+		{Symbol: BONUS, Count: 3}: 331,
 
-		{Symbol: "LT", Count: 3}: 5,
-		{Symbol: "LT", Count: 4}: 25,
-		{Symbol: "LT", Count: 5}: 200,
+		{Symbol: SCATTER, Count: 3}: 5,
+		{Symbol: SCATTER, Count: 4}: 25,
+		{Symbol: SCATTER, Count: 5}: 200,
 	}
 }
