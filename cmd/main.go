@@ -29,15 +29,13 @@ func main() {
 	var numPlays int
 
 	if len(args) > 2 {
-		// Correctly parse args[1] (second argument) as an integer
 		numPlays, err = strconv.Atoi(args[2]) // Correctly use args[1]
 
 		if err != nil {
-			numPlays = 1_000_000                               // Default value
 			log.Fatal("Error parsing numPlays argument:", err) // Proper error logging
 		}
 	} else {
-		numPlays = 1_000_000 // Default value if no argument is provided
+		numPlays = 10_000_000 // Default value if no argument is provided
 	}
 	totalBet := numLines * creditsWagered
 	game := reel.NewSlots()
@@ -45,16 +43,22 @@ func main() {
 	i := 0
 	for i < int(numPlays) {
 		game.Spin()
-		totals += game.Evaluate(int(numLines))
+		totals += game.Evaluate(int(numLines), int(creditsWagered))
 		i++
 	}
-	// game.PrintReel()
-	fmt.Println("Amount won!!!!! ", totals)
-	fmt.Println("RTP!!!!! ", float64(totals)/(float64(totalBet*int64(numPlays))))
-	fmt.Println("Bonuses Hit: ", float64(game.BonusesHit)/(float64(totalBet)*float64(numPlays)))
-	fmt.Println("Lines Hit: ", float64(game.LinesPaidOut)/(float64(totalBet)*float64(numPlays)))
+	bonusHitFreq := float64(game.BonusesHitRate) / (float64(numPlays * int(numLines)))
+	lineHitFreq := float64(game.LineHitRate) / float64(numPlays*int(numLines))
+	scatterHitFreq := float64(game.ScatterHitRate) / (float64(numPlays))
+	fmt.Println("plays, lines, wagered ", numPlays, numLines, creditsWagered)
+	fmt.Println("Credits won: ", totals, "/", totalBet*int64(numPlays))
+	fmt.Println("Return to player: ", float64(totals)/(float64(totalBet*int64(numPlays))))
+	fmt.Println("Bonuses Hit Freq: ", bonusHitFreq)
+	fmt.Println("Bonuses Paid percentage: ", float64(game.BonusesHitPay)/(float64(totalBet)*float64(numPlays)))
 
-	fmt.Println("Scatter counter", game.ScatterPaidOut)
-	fmt.Println("Scatter Hit: ", float64(game.ScatterPaidOut)/(float64(totalBet)*float64(numPlays)))
+	fmt.Println("Lines hit freq ", lineHitFreq)
+	fmt.Println("Lines paid percentage: ", float64(game.LineHitPay)/(float64(totalBet)*float64(numPlays)))
+	fmt.Println("Scatter hit freq", scatterHitFreq)
+	fmt.Println("Scatter paid percentage: ", float64(game.ScatterHitPay)/(float64(totalBet)*float64(numPlays)))
+	fmt.Println("Total hit freq", scatterHitFreq+lineHitFreq+bonusHitFreq)
 
 }
